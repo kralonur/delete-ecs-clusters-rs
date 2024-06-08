@@ -1,0 +1,14 @@
+[package]
+name = "delete-ecs-clusters"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+aws-config = "1.5.1"
+aws-sdk-ecs = "1.30.0"
+dotenvy = "0.15.7"
+env_logger = "0.11.3"
+futures = "0.3.30"
+log = "0.4.21"
+tokio = { version = "1.38.0", features = ["full"] }
