@@ -525,7 +525,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "delete-ecs-clusters"
+name = "delete-ecs-clusters-rs"
 version = "0.1.0"
 dependencies = [
  "anyhow",

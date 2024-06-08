@@ -10,27 +10,13 @@ const PROCESS_AMOUNT_AT_ONCE: usize = 5;
 async fn main() -> Result<()> {
     env_logger::init();
 
-    set_var(
-        "AWS_ACCESS_KEY_ID",
-        dotenvy::var("AWS_ACCESS_KEY_ID").unwrap(),
-    );
-    set_var(
-        "AWS_SECRET_ACCESS_KEY",
-        dotenvy::var("AWS_SECRET_ACCESS_KEY").unwrap(),
-    );
-    set_var("AWS_REGION", dotenvy::var("AWS_REGION").unwrap());
+    set_env_vars();
 
-    let region_provider = RegionProviderChain::default_provider();
-    log::info!("Region: {:?}", region_provider.region().await);
-    let config = aws_config::defaults(BehaviorVersion::latest())
-        .region(region_provider)
-        .load()
-        .await;
-    let client = Client::new(&config);
+    let client = get_client().await;
 
-    let resp = client.list_clusters().send().await?;
+    let list_clusters = client.list_clusters().send().await?;
 
-    let cluster_arns = resp.cluster_arns();
+    let cluster_arns = list_clusters.cluster_arns();
     log::info!("Found {} clusters:", cluster_arns.len());
 
     let clusters = client
@@ -55,6 +41,28 @@ async fn main() -> Result<()> {
         .await;
 
     Ok(())
+}
+
+fn set_env_vars() {
+    set_var(
+        "AWS_ACCESS_KEY_ID",
+        dotenvy::var("AWS_ACCESS_KEY_ID").unwrap(),
+    );
+    set_var(
+        "AWS_SECRET_ACCESS_KEY",
+        dotenvy::var("AWS_SECRET_ACCESS_KEY").unwrap(),
+    );
+    set_var("AWS_REGION", dotenvy::var("AWS_REGION").unwrap());
+}
+
+async fn get_client() -> Client {
+    let region_provider = RegionProviderChain::default_provider();
+    log::info!("Region: {:?}", region_provider.region().await);
+    let config = aws_config::defaults(BehaviorVersion::latest())
+        .region(region_provider)
+        .load()
+        .await;
+    Client::new(&config)
 }
 
 async fn delete_cluster(client: &Client, cluster: &Cluster) -> Result<()> {
