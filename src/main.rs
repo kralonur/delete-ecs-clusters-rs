@@ -9,7 +9,7 @@ enum RunType {
     TaskDefinition,
 }
 
-/// Simple program to greet a person
+/// A simple program to delete clusters on ECS and deregister task definitions
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
 struct Args {
