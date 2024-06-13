@@ -1,5 +1,5 @@
 use anyhow::Result;
-use delete_ecs_clusters_rs::run;
+use delete_ecs_clusters_rs::run_task_definitions;
 use std::env::set_var;
 
 #[tokio::main]
@@ -8,7 +8,7 @@ async fn main() -> Result<()> {
 
     set_env_vars();
 
-    if let Err(e) = run().await {
+    if let Err(e) = run_task_definitions().await {
         log::error!("Application error: {}", e);
         std::process::exit(1);
     }

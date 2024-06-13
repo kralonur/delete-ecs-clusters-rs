@@ -5,6 +5,35 @@ use futures::StreamExt;
 
 const PROCESS_AMOUNT_AT_ONCE: usize = 5;
 
+pub async fn run_task_definitions() -> Result<()> {
+    let client = get_client().await;
+
+    let list_task_definitions = client.list_task_definitions().send().await?;
+
+    let task_definitions = list_task_definitions.task_definition_arns();
+
+    log::info!("Found {} task definitions:", task_definitions.len());
+
+    let deregister_task_definition_iter = task_definitions.iter().map(|td| {
+        client
+            .deregister_task_definition()
+            .set_task_definition(Some(td.to_owned()))
+            .send()
+    });
+
+    let deregister_task_definition_stream = futures::stream::iter(deregister_task_definition_iter);
+
+    deregister_task_definition_stream
+        .for_each_concurrent(PROCESS_AMOUNT_AT_ONCE, |result| async move {
+            if let Err(e) = result.await {
+                log::error!("Error deleting task definition: {:?}", e);
+            }
+        })
+        .await;
+
+    Ok(())
+}
+
 pub async fn run() -> Result<()> {
     let client = get_client().await;
 
