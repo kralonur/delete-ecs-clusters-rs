@@ -1,14 +1,35 @@
 use anyhow::Result;
-use delete_ecs_clusters_rs::run_task_definitions;
+use clap::{Parser, ValueEnum};
+use delete_ecs_clusters_rs::{run, run_task_definitions};
 use std::env::set_var;
+
+#[derive(Debug, Clone, ValueEnum)] // ArgEnum here
+enum RunType {
+    Cluster,
+    TaskDefinition,
+}
+
+/// Simple program to greet a person
+#[derive(Parser, Debug)]
+#[command(about, long_about = None)]
+struct Args {
+    #[arg(short, long)]
+    run_type: RunType,
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
     env_logger::init();
+    let args = Args::parse();
 
     set_env_vars();
 
-    if let Err(e) = run_task_definitions().await {
+    let run_type = match args.run_type {
+        RunType::Cluster => run().await,
+        RunType::TaskDefinition => run_task_definitions().await,
+    };
+
+    if let Err(e) = run_type {
         log::error!("Application error: {}", e);
         std::process::exit(1);
     }

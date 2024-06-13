@@ -155,9 +155,9 @@ dependencies = [
 
 [[package]]
 name = "aws-sdk-ecs"
-version = "1.30.0"
+version = "1.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4c8f4ad57bbd06e23a16851f9a21e0e148f068cf73c39aeb30b02b29b9fbc24"
+checksum = "8fbafe34f95491a595ea1b95936d5f7fe413ead7933662291afe6bb1eaca0405"
 dependencies = [
  "aws-credential-types",
  "aws-runtime",
@@ -318,9 +318,9 @@ dependencies = [
 
 [[package]]
 name = "aws-smithy-runtime"
-version = "1.5.5"
+version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0d3965f6417a92a6d1009c5958a67042f57e46342afb37ca58f9ad26744ec73"
+checksum = "db83b08939838d18e33b5dbaf1a0f048f28c10bd28071ab7ce6f245451855414"
 dependencies = [
  "aws-smithy-async",
  "aws-smithy-http",
@@ -332,6 +332,7 @@ dependencies = [
  "http 0.2.12",
  "http-body 0.4.6",
  "http-body 1.0.0",
+ "httparse",
  "hyper",
  "hyper-rustls",
  "once_cell",
@@ -344,9 +345,9 @@ dependencies = [
 
 [[package]]
 name = "aws-smithy-runtime-api"
-version = "1.6.2"
+version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4179bd8a1c943e1aceb46c5b9fc014a561bd6c35a2153e816ba29076ee49d245"
+checksum = "1b570ea39eb95bd32543f6e4032bce172cb6209b9bc8c83c770d08169e875afc"
 dependencies = [
  "aws-smithy-async",
  "aws-smithy-types",
@@ -361,9 +362,9 @@ dependencies = [
 
 [[package]]
 name = "aws-smithy-types"
-version = "1.1.10"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b6764ba7e1c5ede1c9f9e4046645534f06c2581402461c559b481a420330a83"
+checksum = "cfe321a6b21f5d8eabd0ade9c55d3d0335f3c3157fc2b3e87f05f34b539e4df5"
 dependencies = [
  "base64-simd",
  "bytes",
@@ -484,6 +485,46 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "clap"
+version = "4.5.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5db83dced34638ad474f39f250d7fea9598bdd239eaced1bdf45d597da0f433f"
+dependencies = [
+ "clap_builder",
+ "clap_derive",
+]
+
+[[package]]
+name = "clap_builder"
+version = "4.5.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7e204572485eb3fbf28f871612191521df159bc3e15a9f5064c66dba3a8c05f"
+dependencies = [
+ "anstream",
+ "anstyle",
+ "clap_lex",
+ "strsim",
+]
+
+[[package]]
+name = "clap_derive"
+version = "4.5.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c780290ccf4fb26629baa7a1081e68ced113f1d3ec302fa5948f1c381ebf06c6"
+dependencies = [
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "clap_lex"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4b82cf0babdbd58558212896d1a4272303a57bdb245c2bf1147185fb45640e70"
+
+[[package]]
 name = "colorchoice"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -531,6 +572,7 @@ dependencies = [
  "anyhow",
  "aws-config",
  "aws-sdk-ecs",
+ "clap",
  "dotenvy",
  "env_logger",
  "futures",
@@ -760,6 +802,12 @@ name = "hashbrown"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5274423e17b7c9fc20b6e7e208532f9b19825d82dfd615708b70edd83df41f1"
+
+[[package]]
+name = "heck"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "hermit-abi"
@@ -1349,6 +1397,12 @@ name = "spin"
 version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
+
+[[package]]
+name = "strsim"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "subtle"

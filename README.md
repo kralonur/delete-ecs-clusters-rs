@@ -1,6 +1,6 @@
 # Delete ECS Clusters RS
 
-This basic project is used to delete all clusters for ECS(Elastic Container Service) in AWS.
+This basic project is used to delete all clusters for ECS(Elastic Container Service) and task definitions in AWS.
 
 ## Run
 
@@ -16,4 +16,9 @@ cargo run --release
 To run with logs:
 ```bash
 RUST_LOG=info cargo run --release
+```
+
+To see the help add (`-- --help`) ex:
+```bash
+cargo run --release -- --help
 ```
