@@ -13,7 +13,7 @@ enum RunType {
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
 struct Args {
-    #[arg(short, long)]
+    #[arg(short, long, value_enum, default_value_t = RunType::Cluster)]
     run_type: RunType,
 }
 
