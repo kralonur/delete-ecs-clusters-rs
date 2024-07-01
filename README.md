@@ -22,3 +22,4 @@ To see the help add (`-- --help`) ex:
 ```bash
 cargo run --release -- --help
 ```
+PS: There is also options for running multiple regions, regions are in the `regions.txt` file, so regions can be added or removed from there.
