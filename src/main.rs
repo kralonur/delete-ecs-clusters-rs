@@ -1,12 +1,13 @@
 use anyhow::Result;
 use clap::{Parser, ValueEnum};
-use delete_ecs_clusters_rs::{run, run_task_definitions};
+use delete_ecs_clusters_rs::{run, run_task_definitions, run_task_definitions_delete};
 use std::env::set_var;
 
 #[derive(Debug, Clone, ValueEnum)] // ArgEnum here
 enum RunType {
     Cluster,
-    TaskDefinition,
+    DeregisterTaskDefinition,
+    DeleteTaskDefinition,
 }
 
 /// A simple program to delete clusters on ECS and deregister task definitions
@@ -26,7 +27,8 @@ async fn main() -> Result<()> {
 
     let run_type = match args.run_type {
         RunType::Cluster => run().await,
-        RunType::TaskDefinition => run_task_definitions().await,
+        RunType::DeregisterTaskDefinition => run_task_definitions().await,
+        RunType::DeleteTaskDefinition => run_task_definitions_delete().await,
     };
 
     if let Err(e) = run_type {

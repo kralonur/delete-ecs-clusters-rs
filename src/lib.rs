@@ -1,6 +1,6 @@
 use anyhow::Result;
 use aws_config::{meta::region::RegionProviderChain, BehaviorVersion};
-use aws_sdk_ecs::{types::Cluster, Client};
+use aws_sdk_ecs::{types::Cluster, types::TaskDefinitionStatus, Client};
 use futures::StreamExt;
 
 const PROCESS_AMOUNT_AT_ONCE: usize = 5;
@@ -12,7 +12,7 @@ pub async fn run_task_definitions() -> Result<()> {
 
     let task_definitions = list_task_definitions.task_definition_arns();
 
-    log::info!("Found {} task definitions:", task_definitions.len());
+    log::info!("Found {} task definitions", task_definitions.len());
 
     let deregister_task_definition_iter = task_definitions.iter().map(|td| {
         client
@@ -24,6 +24,42 @@ pub async fn run_task_definitions() -> Result<()> {
     let deregister_task_definition_stream = futures::stream::iter(deregister_task_definition_iter);
 
     deregister_task_definition_stream
+        .for_each_concurrent(PROCESS_AMOUNT_AT_ONCE, |result| async move {
+            if let Err(e) = result.await {
+                log::error!("Error deregistering task definition: {:?}", e);
+            }
+        })
+        .await;
+
+    Ok(())
+}
+
+pub async fn run_task_definitions_delete() -> Result<()> {
+    let client = get_client().await;
+
+    let list_task_definitions = client
+        .list_task_definitions()
+        .status(TaskDefinitionStatus::Inactive)
+        .send()
+        .await?;
+
+    let task_definitions = list_task_definitions.task_definition_arns();
+
+    log::info!("Found {} task definitions", task_definitions.len());
+
+    let chunk_size = 10;
+    let task_definition_chunks = task_definitions.chunks(chunk_size).collect::<Vec<_>>();
+
+    let delete_task_definitions_iter = task_definition_chunks.iter().map(|td| {
+        client
+            .delete_task_definitions()
+            .set_task_definitions(Some(td.to_vec()))
+            .send()
+    });
+
+    let delete_task_definitions_stream = futures::stream::iter(delete_task_definitions_iter);
+
+    delete_task_definitions_stream
         .for_each_concurrent(PROCESS_AMOUNT_AT_ONCE, |result| async move {
             if let Err(e) = result.await {
                 log::error!("Error deleting task definition: {:?}", e);
@@ -40,7 +76,7 @@ pub async fn run() -> Result<()> {
     let list_clusters = client.list_clusters().send().await?;
 
     let cluster_arns = list_clusters.cluster_arns();
-    log::info!("Found {} clusters:", cluster_arns.len());
+    log::info!("Found {} clusters", cluster_arns.len());
 
     let clusters = client
         .describe_clusters()
